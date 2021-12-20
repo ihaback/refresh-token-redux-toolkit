@@ -32,7 +32,7 @@ export const logout = createAsyncThunk(
   async (_, { getState }) => {
     const state = getState() as RootState;
 
-    return axiosPrivate.post(
+    const res = await axiosPrivate.post(
       `logout`,
       {
         token: state.userData?.user?.refreshToken,
@@ -43,6 +43,8 @@ export const logout = createAsyncThunk(
         },
       }
     );
+
+    return res.data;
   }
 );
 
@@ -51,9 +53,11 @@ export const deleteUser = createAsyncThunk(
   async (id: number, { getState }) => {
     const state = getState() as RootState;
 
-    return axiosPrivate.delete(`users/${id}`, {
+    const res = await axiosPrivate.delete(`users/${id}`, {
       headers: { authorization: `Bearer ${state.userData.user?.accessToken}` },
     });
+
+    return res.data;
   }
 );
 
