@@ -15,7 +15,7 @@ export const Users: FC = () => {
 
   return (
     <div>
-      <p>
+      <p id="welcome-text">
         Welcome <b>{user?.username}</b>. You have access to the
         <b> {user?.isAdmin ? "admin" : "user"}</b> role.
       </p>
@@ -25,6 +25,7 @@ export const Users: FC = () => {
           type="button"
           className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2 flex-1"
           onClick={() => handleDeleteUser(1)}
+          id="delete-admin-button"
         >
           Delete Admin
         </button>
@@ -32,11 +33,12 @@ export const Users: FC = () => {
           type="button"
           className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ml-2 flex-1"
           onClick={() => handleDeleteUser(2)}
+          id="delete-user-button"
         >
           Delete User
         </button>
       </div>
-      <div className="pt-4">
+      <div className="pt-4" id="delete-status-container">
         {success && (
           <p className="text-green-600">
             User has been deleted successfully...
