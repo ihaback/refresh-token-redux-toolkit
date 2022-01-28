@@ -25,15 +25,19 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("loginAsAdmin", () => {
+  cy.intercept("POST", "**/login").as("login");
   cy.visit("http://localhost:3000");
   cy.get("#username").type("john");
   cy.get("#password").type("john123");
   cy.get("#login-button").click();
+  cy.wait("@login").its("response.statusCode").should("be.oneOf", [200]);
 });
 
 Cypress.Commands.add("loginAsUser", () => {
+  cy.intercept("POST", "**/login").as("login");
   cy.visit("http://localhost:3000");
   cy.get("#username").type("joe");
   cy.get("#password").type("joe123");
   cy.get("#login-button").click();
+  cy.wait("@login").its("response.statusCode").should("be.oneOf", [200]);
 });
