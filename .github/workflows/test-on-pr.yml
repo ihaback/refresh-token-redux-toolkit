@@ -1,14 +1,19 @@
-name: Test on PR
+name: Test & Merge on dependabot PR
 
 on: pull_request
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v2
       
+      - name: Dependabot metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: "{{secrets.GITHUB_TOKEN}}"
+
       - name: Set up node
         uses: actions/setup-node@v1
         with:
@@ -36,4 +41,23 @@ jobs:
           wait-on-timeout: 60
           spec: cypress/integration/*.js
           browser: chrome
+
+      - name: Add automatic review label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
+        with:
+          labels: automatic-merge
+
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Approve
+        uses: hmarr/auto-approve-action@v2.1.0
+        if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
 
