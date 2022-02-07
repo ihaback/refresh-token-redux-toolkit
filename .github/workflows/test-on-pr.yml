@@ -5,8 +5,6 @@ on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{github.action == 'dependabot[bot]'}}
-
     steps:
       - uses: actions/checkout@v2
       
