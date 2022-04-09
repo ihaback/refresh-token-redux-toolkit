@@ -29,6 +29,18 @@ jobs:
       - name: Lint application
         run: npm run lint
 
+      - name: Setup git config
+        run: |
+          # setup the username and email
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - name: Commit changes from lint step
+        run: |
+          # Stage the file, commit and push
+          git add .
+          git commit -m "Commit changes from lint step"
+
       - name: Build application
         run: npm run build
 
