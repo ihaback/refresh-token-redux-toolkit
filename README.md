@@ -5,6 +5,10 @@ Refresh Tokens are credentials used to obtain access tokens. Refresh tokens are 
 ```
 npm install
 ```
+or with volta versions defined in package.json (recommended)
+```
+volta run npm install
+```
 
 ### Run React and Express backend simultaneously
 ```
