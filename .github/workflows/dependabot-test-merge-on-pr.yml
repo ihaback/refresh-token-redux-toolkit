@@ -33,14 +33,14 @@ jobs:
         run: npm run build
 
       - name: E2E tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4.1.0
         continue-on-error: false
         with:
           record: false
           start: npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 60
-          spec: cypress/integration/*.js
+          spec: cypress/e2e/*.js
           browser: chrome
 
       - name: Enable auto-merge for Dependabot PRs
