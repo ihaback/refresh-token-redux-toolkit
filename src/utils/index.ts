@@ -1,17 +1,7 @@
-import axios, {
-  AxiosRequestConfig,
-  RawAxiosRequestHeaders,
-  AxiosHeaders,
-} from "axios";
+import axios from "axios";
 import { store } from "store";
 import { refreshToken } from "features";
 import jwt_decode from "jwt-decode";
-
-interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-  headers?:
-    | (RawAxiosRequestHeaders & { authorization?: string })
-    | (AxiosHeaders & { authorization?: string });
-}
 
 export const axiosPublic = axios.create({
   baseURL: "http://localhost:5000/api",
@@ -21,7 +11,7 @@ export const axiosPrivate = axios.create({
 });
 
 axiosPrivate.interceptors.request.use(
-  async (config: CustomAxiosRequestConfig) => {
+  async (config) => {
     const user = store?.getState()?.userData?.user;
 
     let currentDate = new Date();
