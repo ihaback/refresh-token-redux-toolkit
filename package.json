@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "cypress": "^12.7.0",
-    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.21",
