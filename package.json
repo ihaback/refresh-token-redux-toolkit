@@ -50,7 +50,7 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^12.8.0",
+    "cypress": "^12.8.1",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^4.2.1",
