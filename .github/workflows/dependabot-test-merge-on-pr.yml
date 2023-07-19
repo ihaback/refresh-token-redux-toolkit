@@ -21,7 +21,7 @@ jobs:
           node-version: 16.x
 
       - name: Install packages
-        run: npm install
+        run: npm ci --legacy-peer-deps
 
       - name: Run a security audit        
         run: npm audit --audit-level=critical
