@@ -4,10 +4,10 @@ import { refreshToken } from "features";
 import jwt_decode from "jwt-decode";
 
 export const axiosPublic = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:6060/api",
 });
 export const axiosPrivate = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:6060/api",
 });
 
 axiosPrivate.interceptors.request.use(

@@ -119,4 +119,4 @@ app.post("/api/logout", verify, (req, res) => {
   res.status(200).json("You logged out successfully.");
 });
 
-app.listen(5000, () => console.log("Backend server is running!"));
+app.listen(6060, () => console.log("Backend server is running!"));
