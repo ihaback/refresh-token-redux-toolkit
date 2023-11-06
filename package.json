@@ -11,7 +11,7 @@
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
