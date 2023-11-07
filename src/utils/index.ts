@@ -1,7 +1,7 @@
 import axios from "axios";
 import { store } from "store";
 import { refreshToken } from "features";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export const axiosPublic = axios.create({
   baseURL: "http://localhost:6060/api",
