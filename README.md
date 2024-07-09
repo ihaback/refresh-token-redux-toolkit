@@ -125,11 +125,12 @@ export const userSlice = createSlice({
     builder
       .addCase(
         login.fulfilled,
-        (state, action: PayloadAction<AppState["user"]>) => {
+        (state, action: PayloadAction<UserResponse>) => {
           localStorage.setItem("user", JSON.stringify(action.payload));
           state.user = action.payload;
         }
       )
+
       .addCase(logout.fulfilled, (state) => {
         localStorage.removeItem("user");
         state.user = null;
@@ -148,10 +149,14 @@ export const userSlice = createSlice({
       .addCase(deleteUser.rejected, (state) => {
         state.error = true;
       })
-      .addCase(refreshToken.fulfilled, (state, action) => {
-        localStorage.setItem("user", JSON.stringify(action.payload));
-        state.user = action.payload as AppState["user"];
-      });
+      .addCase(
+        refreshToken.fulfilled,
+        (state, action: PayloadAction<RefreshTokenResponse>) => {
+          localStorage.setItem("user", JSON.stringify(action.payload));
+          state.user!.accessToken = action.payload.accessToken;
+          state.user!.refreshToken = action.payload.refreshToken;
+        }
+      );
   },
 });
 ```

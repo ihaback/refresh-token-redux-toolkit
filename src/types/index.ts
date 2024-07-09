@@ -10,3 +10,15 @@ export interface AppState {
   success: boolean;
   error: boolean;
 }
+
+export interface UserResponse {
+  username: string;
+  isAdmin: boolean;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}

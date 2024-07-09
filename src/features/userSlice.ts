@@ -1,24 +1,24 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "store";
-import { AppState } from "types";
+import { ThunkRootState } from "store";
+import { AppState, UserResponse, RefreshTokenResponse } from "types";
 import { axiosPublic, axiosPrivate } from "utils";
 
 const modulePrefix = "user";
 
 const initialState: AppState = {
-  user: JSON.parse(localStorage?.getItem("user") as string) || null,
+  user: JSON.parse(localStorage?.getItem("user") as string),
   username: "",
   password: "",
   success: false,
   error: false,
 };
 
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<UserResponse, void, ThunkRootState>(
   `${modulePrefix}/login`,
   async (_, { getState }) => {
-    const state = getState() as RootState;
+    const state = getState();
 
-    const res = await axiosPublic.post("login", {
+    const res = await axiosPublic.post<UserResponse>("login", {
       username: state.userData.username,
       password: state.userData.password,
     });
@@ -27,12 +27,12 @@ export const login = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk(
+export const logout = createAsyncThunk<string, void, ThunkRootState>(
   `${modulePrefix}/logout`,
   async (_, { getState }) => {
-    const state = getState() as RootState;
+    const state = getState();
 
-    const res = await axiosPrivate.post(
+    const res = await axiosPrivate.post<string>(
       `logout`,
       {
         token: state.userData?.user?.refreshToken,
@@ -48,12 +48,12 @@ export const logout = createAsyncThunk(
   }
 );
 
-export const deleteUser = createAsyncThunk(
+export const deleteUser = createAsyncThunk<string, number, ThunkRootState>(
   `${modulePrefix}/deleteUser`,
-  async (id: number, { getState }) => {
-    const state = getState() as RootState;
+  async (id, { getState }) => {
+    const state = getState();
 
-    const res = await axiosPrivate.delete(`users/${id}`, {
+    const res = await axiosPrivate.delete<string>(`users/${id}`, {
       headers: { authorization: `Bearer ${state.userData.user?.accessToken}` },
     });
 
@@ -61,24 +61,19 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-export const refreshToken = createAsyncThunk(
-  `${modulePrefix}/refreshToken`,
-  async (_, { getState }) => {
-    const state = getState() as RootState;
+export const refreshToken = createAsyncThunk<
+  RefreshTokenResponse,
+  void,
+  ThunkRootState
+>(`${modulePrefix}/refreshToken`, async (_, { getState }) => {
+  const state = getState();
 
-    const res = await axiosPublic.post(`refresh`, {
-      token: state.userData.user?.refreshToken,
-    });
+  const res = await axiosPublic.post<RefreshTokenResponse>(`refresh`, {
+    token: state.userData.user?.refreshToken,
+  });
 
-    const newUser = {
-      ...state.userData.user,
-      accessToken: res.data.accessToken,
-      refreshToken: res.data.refreshToken,
-    };
-
-    return newUser;
-  }
-);
+  return res.data;
+});
 
 export const userSlice = createSlice({
   name: "user",
@@ -95,11 +90,12 @@ export const userSlice = createSlice({
     builder
       .addCase(
         login.fulfilled,
-        (state, action: PayloadAction<AppState["user"]>) => {
+        (state, action: PayloadAction<UserResponse>) => {
           localStorage.setItem("user", JSON.stringify(action.payload));
           state.user = action.payload;
         }
       )
+
       .addCase(logout.fulfilled, (state) => {
         localStorage.removeItem("user");
         state.user = null;
@@ -118,10 +114,14 @@ export const userSlice = createSlice({
       .addCase(deleteUser.rejected, (state) => {
         state.error = true;
       })
-      .addCase(refreshToken.fulfilled, (state, action) => {
-        localStorage.setItem("user", JSON.stringify(action.payload));
-        state.user = action.payload as AppState["user"];
-      });
+      .addCase(
+        refreshToken.fulfilled,
+        (state, action: PayloadAction<RefreshTokenResponse>) => {
+          localStorage.setItem("user", JSON.stringify(action.payload));
+          state.user!.accessToken = action.payload.accessToken;
+          state.user!.refreshToken = action.payload.refreshToken;
+        }
+      );
   },
 });
 
