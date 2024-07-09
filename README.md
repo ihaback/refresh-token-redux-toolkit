@@ -88,7 +88,7 @@ axiosPrivate.interceptors.request.use(
 
     let currentDate = new Date();
     if (user?.accessToken) {
-      const decodedToken: { exp: number } = jwt_decode(user?.accessToken);
+      const decodedToken = jwtDecode < { exp: number } > user?.accessToken;
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         await store.dispatch(refreshToken());
         if (config?.headers) {
