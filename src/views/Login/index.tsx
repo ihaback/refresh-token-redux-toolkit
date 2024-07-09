@@ -3,8 +3,8 @@ import { useAppSelector, useAppDispatch } from "store";
 import { updateUserName, updatePassword, login } from "features";
 
 export const Login: FC = () => {
-  const username = useAppSelector((state) => state.userData.username);
-  const password = useAppSelector((state) => state.userData.password);
+  const username = useAppSelector((state) => state.auth.username);
+  const password = useAppSelector((state) => state.auth.password);
 
   const dispatch = useAppDispatch();
 

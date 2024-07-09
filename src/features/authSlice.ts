@@ -19,8 +19,8 @@ export const login = createAsyncThunk<UserResponse, void, ThunkRootState>(
     const state = getState();
 
     const res = await axiosPublic.post<UserResponse>("login", {
-      username: state.userData.username,
-      password: state.userData.password,
+      username: state.auth.username,
+      password: state.auth.password,
     });
 
     return res.data;
@@ -35,11 +35,11 @@ export const logout = createAsyncThunk<string, void, ThunkRootState>(
     const res = await axiosPrivate.post<string>(
       `logout`,
       {
-        token: state.userData?.user?.refreshToken,
+        token: state.auth?.user?.refreshToken,
       },
       {
         headers: {
-          authorization: `Bearer ${state.userData?.user?.accessToken}`,
+          authorization: `Bearer ${state.auth?.user?.accessToken}`,
         },
       }
     );
@@ -54,7 +54,7 @@ export const deleteUser = createAsyncThunk<string, number, ThunkRootState>(
     const state = getState();
 
     const res = await axiosPrivate.delete<string>(`users/${id}`, {
-      headers: { authorization: `Bearer ${state.userData.user?.accessToken}` },
+      headers: { authorization: `Bearer ${state.auth.user?.accessToken}` },
     });
 
     return res.data;
@@ -69,7 +69,7 @@ export const refreshToken = createAsyncThunk<
   const state = getState();
 
   const res = await axiosPublic.post<RefreshTokenResponse>(`refresh`, {
-    token: state.userData.user?.refreshToken,
+    token: state.auth.user?.refreshToken,
   });
 
   return res.data;

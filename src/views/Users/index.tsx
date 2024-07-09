@@ -3,9 +3,9 @@ import { useAppSelector, useAppDispatch } from "store";
 import { deleteUser } from "features";
 
 export const Users: FC = () => {
-  const user = useAppSelector((state) => state?.userData?.user);
-  const success = useAppSelector((state) => state?.userData?.success);
-  const error = useAppSelector((state) => state?.userData?.error);
+  const user = useAppSelector((state) => state?.auth?.user);
+  const success = useAppSelector((state) => state?.auth?.success);
+  const error = useAppSelector((state) => state?.auth?.error);
   const dispatch = useAppDispatch();
 
   const handleDeleteUser = useCallback(

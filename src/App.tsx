@@ -4,7 +4,7 @@ import { Login, Users } from "views";
 import { useAppSelector } from "store";
 
 function App() {
-  const user = useAppSelector((state) => state?.userData?.user);
+  const user = useAppSelector((state) => state?.auth?.user);
   return (
     <div className="bg-gray-100 h-full">
       <Navbar />

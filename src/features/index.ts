@@ -6,4 +6,4 @@ export {
   logout,
   deleteUser,
   refreshToken,
-} from "./userSlice";
+} from "./authSlice";

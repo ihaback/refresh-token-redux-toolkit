@@ -84,7 +84,7 @@ export const axiosPrivate = axios.create({ baseURL: "http://localhost:6060" });
 // src/utils/index.ts
 axiosPrivate.interceptors.request.use(
   async (config) => {
-    const user = store?.getState()?.userData?.user;
+    const user = store?.getState()?.auth?.user;
 
     let currentDate = new Date();
     if (user?.accessToken) {
@@ -93,7 +93,7 @@ axiosPrivate.interceptors.request.use(
         await store.dispatch(refreshToken());
         if (config?.headers) {
           config.headers["authorization"] = `Bearer ${
-            store?.getState()?.userData?.user?.accessToken
+            store?.getState()?.auth?.user?.accessToken
           }`;
         }
       }

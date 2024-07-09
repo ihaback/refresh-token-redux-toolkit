@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "store";
 import { logout } from "features";
 
 export const Navbar = () => {
-  const user = useAppSelector((state) => state?.userData?.user);
+  const user = useAppSelector((state) => state?.auth?.user);
   const dispatch = useAppDispatch();
 
   const handleLogOut = useCallback(() => dispatch(logout()), [dispatch]);
