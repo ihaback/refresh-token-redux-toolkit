@@ -1,5 +1,5 @@
 export {
-  userSlice,
+  authSlice,
   updateUserName,
   updatePassword,
   login,

@@ -3,7 +3,7 @@ import { ThunkRootState } from "store";
 import { AppState, UserResponse, RefreshTokenResponse } from "types";
 import { axiosPublic, axiosPrivate } from "utils";
 
-const modulePrefix = "user";
+const modulePrefix = "auth";
 
 const initialState: AppState = {
   user: JSON.parse(localStorage?.getItem("user") as string),
@@ -75,8 +75,8 @@ export const refreshToken = createAsyncThunk<
   return res.data;
 });
 
-export const userSlice = createSlice({
-  name: "user",
+export const authSlice = createSlice({
+  name: modulePrefix,
   initialState,
   reducers: {
     updateUserName(state, action: PayloadAction<AppState["username"]>) {
@@ -125,4 +125,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { updateUserName, updatePassword } = userSlice.actions;
+export const { updateUserName, updatePassword } = authSlice.actions;

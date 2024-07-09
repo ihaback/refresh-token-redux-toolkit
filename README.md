@@ -109,9 +109,9 @@ axiosPrivate.interceptors.request.use(
 ### State handling and communication with the backend is handled through Redux actions
 
 ```ts
-// src/features/userSlice.ts
-export const userSlice = createSlice({
-  name: "user",
+// src/features/authSlice.ts
+export const authSlice = createSlice({
+  name: modulePrefix,
   initialState,
   reducers: {
     updateUserName(state, action: PayloadAction<AppState["username"]>) {
