@@ -54,7 +54,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.5",
     "prettier": "^2.8.8"
   },
   "volta": {
