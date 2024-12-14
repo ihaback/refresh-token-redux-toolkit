@@ -1,6 +1,7 @@
 # JWT Refresh Tokens in React & Redux Toolkit
+📦 ARCHIVED AND NO LONGER MAINTAINED
 
-Refresh Tokens are credentials used to obtain access tokens. Refresh tokens are issued to the client by the authorization server and are used to obtain a new access token when the current access token becomes invalid or expires, or to obtain additional access tokens with identical or narrower scope. This implementation uses React and Redux Toolkit and is inspired by [this repo](https://github.com/safak/youtube/tree/jwt).
+ Refresh Tokens are credentials used to obtain access tokens. Refresh tokens are issued to the client by the authorization server and are used to obtain a new access token when the current access token becomes invalid or expires, or to obtain additional access tokens with identical or narrower scope. This implementation uses React and Redux Toolkit and is inspired by [this repo](https://github.com/safak/youtube/tree/jwt).
 
 ## Project setup
 
