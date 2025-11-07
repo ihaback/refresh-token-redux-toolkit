@@ -1,177 +1,55 @@
-# JWT Refresh Tokens in React & Redux Toolkit
-📦 ARCHIVED AND NO LONGER MAINTAINED
+# Refresh Tokens with React & Redux Toolkit
 
- Refresh Tokens are credentials used to obtain access tokens. Refresh tokens are issued to the client by the authorization server and are used to obtain a new access token when the current access token becomes invalid or expires, or to obtain additional access tokens with identical or narrower scope. This implementation uses React and Redux Toolkit and is inspired by [this repo](https://github.com/safak/youtube/tree/jwt).
+This repository is a small example that attempts demonstrates how to keep a user session alive by refreshing JSON Web Tokens (JWTs) in a React app powered by Redux Toolkit. It is intentionally simple and should be treated as learning material rather than production-ready code.
 
-## Project setup
+## What this project shows
 
-```
+- React + Redux Toolkit handling login, logout, delete user, and refresh flows.
+- Axios instances split into public/private clients with an interceptor that injects updated access tokens.
+- An Express mock API with access tokens that expire after 3 seconds so you can watch the refresh flow in action.
+
+## Getting started
+
+```bash
 npm install
-```
-
-or with volta versions defined in package.json (recommended)
-
-```
+# or use Volta to pin versions
 volta run npm install
 ```
 
-### Run React and Express backend simultaneously
+Start both the Vite dev server and the Express backend:
 
-```
+```bash
 npm run start
 ```
 
-### Credentials to test implementation
+The UI loads at `http://localhost:5173`, while the API lives at `http://localhost:6060`.
+
+## Demo credentials
 
 ```js
-const users = [
-  {
-    id: "1",
-    username: "john",
-    password: "john123",
-    isAdmin: true,
-  },
-  {
-    id: "2",
-    username: "joe",
-    password: "joe123",
-    isAdmin: false,
-  },
-];
+{ username: "john", password: "john123" } // admin
+{ username: "joe", password: "joe123" }   // regular user
 ```
 
-### The backend expects the token to be refreshed after 3 seconds
+## How the refresh flow works
 
-```js
-// server.js
-const generateAccessToken = (user) => {
-  return jwt.sign({ id: user?.id, isAdmin: user?.isAdmin }, "mySecretKey", {
-    expiresIn: "3s",
-  });
-};
+1. The backend issues access tokens that expire in 3 seconds and longer-lived refresh tokens (`server.js`).
+2. The Redux slice (`src/features/authSlice.ts`) stores the user payload and keeps `localStorage` in sync.
+3. The private Axios client (`src/utils/index.ts`) inspects every request:
+   - If the access token is about to expire, it dispatches `refreshToken`.
+   - Once the new token arrives, the pending request is retried with the fresh `Authorization` header.
 
-const verify = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
+This flow keeps the example easy to reason about yet mirrors what you would do in a richer app—swap in your own API, add proper error handling, and plug in secure token storage.
 
-    jwt.verify(token, "mySecretKey", (err, user) => {
-      if (err) {
-        return res.status(403).json("Token is not valid!");
-      }
-
-      req.user = user;
-      next();
-    });
-  } else {
-    res.status(401).json("You are not authenticated!");
-  }
-};
-```
-
-### Two instances of axios for communicating with public and private endpoints
+## State shape reference
 
 ```ts
-// src/utils/index.ts
-import axios from "axios";
-
-export const axiosPublic = axios.create({ baseURL: "http://localhost:6060" });
-export const axiosPrivate = axios.create({ baseURL: "http://localhost:6060" });
-```
-
-## Refreshing tokens is handled by Axios request interceptors
-
-```js
-// src/utils/index.ts
-axiosPrivate.interceptors.request.use(
-  async (config) => {
-    const user = store?.getState()?.auth?.user;
-
-    let currentDate = new Date();
-    if (user?.accessToken) {
-      const decodedToken = <{ exp: number }>(user?.accessToken);
-      if (decodedToken.exp * 1000 < currentDate.getTime()) {
-        await store.dispatch(refreshToken());
-        if (config?.headers) {
-          config.headers["authorization"] = `Bearer ${
-            store?.getState()?.auth?.user?.accessToken
-          }`;
-        }
-      }
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-```
-
-### State handling and communication with the backend is handled through Redux actions
-
-```ts
-// src/features/authSlice.ts
-export const authSlice = createSlice({
-  name: modulePrefix,
-  initialState,
-  reducers: {
-    updateUserName(state, action: PayloadAction<AppState["username"]>) {
-      state.username = action.payload;
-    },
-    updatePassword(state, action: PayloadAction<AppState["password"]>) {
-      state.password = action.payload;
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(
-        login.fulfilled,
-        (state, action: PayloadAction<UserResponse>) => {
-          localStorage.setItem("user", JSON.stringify(action.payload));
-          state.user = action.payload;
-        }
-      )
-
-      .addCase(logout.fulfilled, (state) => {
-        localStorage.removeItem("user");
-        state.user = null;
-        state.username = "";
-        state.password = "";
-        state.success = false;
-        state.error = false;
-      })
-      .addCase(deleteUser.pending, (state) => {
-        state.success = false;
-        state.error = false;
-      })
-      .addCase(deleteUser.fulfilled, (state) => {
-        state.success = true;
-      })
-      .addCase(deleteUser.rejected, (state) => {
-        state.error = true;
-      })
-      .addCase(
-        refreshToken.fulfilled,
-        (state, action: PayloadAction<RefreshTokenResponse>) => {
-          localStorage.setItem("user", JSON.stringify(action.payload));
-          state.user!.accessToken = action.payload.accessToken;
-          state.user!.refreshToken = action.payload.refreshToken;
-        }
-      );
-  },
-});
-```
-
-### The shape of the state
-
-```ts
-// src/types/index.ts
-export interface AppState {
+interface AppState {
   user: {
     accessToken: string;
-    isAdmin: boolean;
     refreshToken: string;
     username: string;
+    isAdmin: boolean;
   } | null;
   username: string;
   password: string;
@@ -179,3 +57,8 @@ export interface AppState {
   error: boolean;
 }
 ```
+
+## Notes
+
+- The repo is archived and kept around simply as a teaching aid.
+- Security best practices (rotating secrets, HTTP-only cookies, CSRF protection, etc.) are intentionally out of scope—add them before using these ideas in production.
